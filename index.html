@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+
+<meta charset="UTF-8">
+<title></title>
+
+<body>
+  <div id="container">
+    Target BPM: <input id="inputTarget" type="text" value="160" /><br />
+    Sections: <input id="inputSections" type="text" value="4" /><br />
+    Func: <input id="inputFunc" type="text" value="s + 1" /><br />
+  </div>
+  <div id="text"></div>
+</body>
+
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  #text {
+    white-space: nowrap;
+  }
+</style>
+
+<script>
+  let lerp = ( a, b, c ) => a * ( 1.0 - c ) + b * c;
+  let calc = () => {
+    let str = "";
+
+    let target = parseFloat( inputTarget.value );
+    let sections = parseInt( inputSections.value );
+    let func = eval( "( s ) => " + inputFunc.value );
+
+    let arr = [];
+    let sum = 0.0;
+
+    for ( let i = 0; i < sections; i ++ ) {
+      arr[ i ] = func( i );
+      sum += arr[ i ];
+    }
+
+    for ( let i = 0; i < sections; i ++ ) {
+      str += Math.round( target * ( sum / sections / arr[ i ] ) * 1000 ) / 1000 + "\n";
+    }
+    text.innerText = str;
+  };
+  calc();
+
+  inputTarget.addEventListener( "change", calc );
+  inputSections.addEventListener( "change", calc );
+  inputFunc.addEventListener( "change", calc );
+</script>
